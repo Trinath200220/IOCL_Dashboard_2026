@@ -1,0 +1,135 @@
+.cardsContainer {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.iconWrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iconWrapper.blue {
+  background-color: var(--primary-blue-light);
+  color: var(--primary-blue);
+}
+
+.iconWrapper.green {
+  background-color: var(--success-green-light);
+  color: var(--success-green);
+}
+
+.iconWrapper.purple {
+  background-color: #f3e8ff;
+  color: #9333ea;
+}
+
+.iconWrapper.yellow {
+  background-color: var(--warning-orange-light);
+  color: var(--warning-orange);
+}
+
+.iconWrapper.teal {
+  background-color: #ccfbf1;
+  color: #0d9488;
+}
+
+.iconWrapper.red {
+  background-color: var(--danger-red-light);
+  color: var(--danger-red);
+}
+
+.cardInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTitle {
+  font-size: 12px;
+  color: var(--text-light);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.cardValue {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.cardSubtext {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+.statusText {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: auto;
+}
+
+.statusText.green {
+  color: var(--success-green);
+}
+
+.statusText.blue {
+  color: var(--primary-blue);
+}
+
+.statusText.red {
+  color: var(--danger-red);
+}
+
+.progressBarContainer {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progressBarBg {
+  flex: 1;
+  height: 6px;
+  background-color: var(--border-color);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.progressBarFill.blue {
+  background-color: var(--primary-blue);
+}
+
+.progressBarFill.green {
+  background-color: var(--success-green);
+}
+
+.progressText {
+  font-size: 11px;
+  color: var(--text-light);
+  font-weight: 600;
+}

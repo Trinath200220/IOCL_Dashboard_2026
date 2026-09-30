@@ -1,0 +1,66 @@
+.container {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-blue);
+}
+
+.viewAll {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-blue);
+  cursor: pointer;
+}
+
+.alarmList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.alarmItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.alarmInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.alarmTime {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-left: auto;
+  margin-right: 12px;
+}
+
+.icon.red { color: var(--danger-red); }
+.icon.yellow { color: var(--warning-orange); }
+
+.badge {
+  background-color: var(--danger-red-light);
+  color: var(--danger-red);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+}

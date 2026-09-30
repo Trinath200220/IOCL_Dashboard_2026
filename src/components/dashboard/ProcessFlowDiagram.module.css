@@ -1,0 +1,220 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-blue);
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--primary-blue);
+  font-weight: 500;
+  border: 1px solid var(--border-color);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.flowDiagram {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  position: relative;
+  overflow-x: auto;
+  min-height: 250px;
+}
+
+.node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+.textNode {
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--sidebar-bg);
+  text-align: center;
+  width: 70px;
+}
+
+.tank {
+  width: 75px;
+  height: 65px;
+  border: 2px solid #94a3b8;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+  position: relative;
+  box-shadow: inset 0 -15px 0 rgba(0, 0, 0, 0.1);
+}
+
+.tank.yellow {
+  background-color: var(--tank-yellow);
+  border-color: #eab308;
+}
+
+.tank.green {
+  background-color: var(--tank-green);
+  border-color: #22c55e;
+}
+
+.tank.red {
+  background-color: var(--tank-red);
+  border-color: #ef4444;
+}
+
+.tank.orange {
+  background-color: var(--tank-orange);
+  border-color: #f97316;
+}
+
+.tank.lightBlue {
+  background-color: #bae6fd;
+  border-color: #3b82f6;
+}
+
+.tankLabel {
+  font-size: 10px;
+  color: #1e293b;
+  margin-top: 4px;
+}
+
+.instrument {
+  position: absolute;
+  top: -30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.instrumentIcon {
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  border: 1px solid #94a3b8;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pump {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-blue);
+  background: white;
+  z-index: 2;
+  padding: 4px;
+}
+
+.connector {
+  flex: 1;
+  height: 2px;
+  background-color: var(--primary-blue);
+  position: relative;
+  min-width: 20px;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.connector::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: -4px;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid var(--primary-blue);
+}
+
+.connector.dashed {
+  background-color: transparent;
+  border-top: 2px dashed var(--primary-blue);
+}
+
+.connector.dashed::after {
+  top: -6px;
+}
+
+.subNodeContainer {
+  position: absolute;
+  bottom: -80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.verticalConnector {
+  width: 2px;
+  height: 40px;
+  background-color: var(--primary-blue);
+  position: relative;
+}
+
+.verticalConnector.up::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -4px;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 8px solid var(--primary-blue);
+}
+
+.verticalConnector.dashed {
+  background-color: transparent;
+  border-left: 2px dashed var(--primary-blue);
+}
+
+.exportBtn {
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  position: absolute;
+  top: -60px;
+  right: 0;
+}

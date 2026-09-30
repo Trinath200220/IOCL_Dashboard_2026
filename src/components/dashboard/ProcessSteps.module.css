@@ -1,0 +1,109 @@
+.stepsContainer {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stepCard {
+  flex: 1;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.stepHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stepNumber {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.stepNumber.yellow {
+  background-color: #eab308;
+}
+
+.stepNumber.green {
+  background-color: #22c55e;
+}
+
+.stepNumber.red {
+  background-color: #ef4444;
+}
+
+.stepNumber.orange {
+  background-color: #f97316;
+}
+
+.stepInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.stepLabel {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-bottom: 2px;
+}
+
+.stepName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sidebar-bg);
+}
+
+.stepSub {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.arrowIcon {
+  color: var(--primary-blue);
+}
+
+.stepStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.statusDot.running {
+  background-color: var(--success-green);
+}
+
+.statusDot.pending {
+  background-color: var(--warning-orange);
+}
+
+.stepStatus.running {
+  color: var(--success-green);
+}
+
+.stepStatus.pending {
+  color: var(--warning-orange);
+}
