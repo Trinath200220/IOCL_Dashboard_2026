@@ -5,6 +5,7 @@ import Header from './components/layout/Header';
 import Dashboard from './components/dashboard/Dashboard';
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
+import Forgotpassword from './components/auth/Forgotpassword';
 import PlaceholderPage from './components/pages/PlaceholderPage';
 import Assets from './components/pages/Assets';
 import ProcessFlowPage from './components/pages/ProcessFlowPage';
@@ -34,6 +35,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<Forgotpassword />} />
         <Route path="/dashboard" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
         <Route path="/process-flow" element={<DashboardLayout><ProcessFlowPage /></DashboardLayout>} />
         <Route path="/process-table" element={<DashboardLayout><ProcessTablePage /></DashboardLayout>} />

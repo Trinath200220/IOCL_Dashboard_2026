@@ -15,14 +15,57 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSignup = (e) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSignup = async (e) => {
     e.preventDefault();
+    setError('');
+
     if (password !== confirmPassword) {
-      alert("Passwords don't match!");
+      setError("Passwords don't match!");
       return;
     }
-    // Simulate signup
-    navigate('/dashboard');
+
+    setIsLoading(true);
+
+    try {
+      const apiIp = import.meta.env.VITE_API_IP;
+      const apiPort = import.meta.env.VITE_API_PORT;
+      
+      const response = await fetch(`http://${apiIp}:${apiPort}/users/signup/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          email, 
+          phone, 
+          password, 
+          confirm_password: confirmPassword 
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        if (data.tokens) {
+          localStorage.setItem('accessToken', data.tokens.access);
+          localStorage.setItem('refreshToken', data.tokens.refresh);
+        }
+        if (data.data) {
+          localStorage.setItem('userData', JSON.stringify(data.data));
+        }
+        navigate('/dashboard');
+      } else {
+        setError(data.message || 'Signup failed. Please try again.');
+      }
+    } catch (err) {
+      console.error('Signup error:', err);
+      setError('An error occurred connecting to the server. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -41,6 +84,8 @@ const Signup = () => {
           <h1 className={styles.title}>Sign Up</h1>
           <p className={styles.subtitle}>Industrial Wastewater Treatment Plant</p>
         </div>
+
+        {error && <div style={{ color: 'red', textAlign: 'center', marginBottom: '10px', fontSize: '14px' }}>{error}</div>}
 
         {/* Form Section */}
         <form onSubmit={handleSignup} className={styles.form}>
@@ -119,8 +164,8 @@ const Signup = () => {
             </div>
           </div>
 
-          <button type="submit" className={styles.loginButton}>
-            Sign Up
+          <button type="submit" className={styles.loginButton} disabled={isLoading}>
+            {isLoading ? 'Signing up...' : 'Sign Up'}
           </button>
         </form>
 

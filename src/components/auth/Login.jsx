@@ -9,12 +9,50 @@ const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Simulate authentication
-    navigate('/dashboard');
+    setIsLoading(true);
+    setError('');
+
+    try {
+      // Dynamically fetch from env
+      const apiIp = import.meta.env.VITE_API_IP;
+      const apiPort = import.meta.env.VITE_API_PORT;
+      
+      const response = await fetch(`http://${apiIp}:${apiPort}/users/login/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // We send username/email and password based on the form fields
+        body: JSON.stringify({ email: username, password: password }),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok && data.success) {
+        // Save tokens and user data to local storage
+        if (data.tokens) {
+          localStorage.setItem('accessToken', data.tokens.access);
+          localStorage.setItem('refreshToken', data.tokens.refresh);
+        }
+        if (data.data) {
+          localStorage.setItem('userData', JSON.stringify(data.data));
+        }
+        // Navigate to dashboard on success
+        navigate('/dashboard');
+      } else {
+        setError(data.message || 'Login failed. Please check your credentials.');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An error occurred connecting to the server. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -33,6 +71,8 @@ const Login = () => {
           <h1 className={styles.title}>Login</h1>
           <p className={styles.subtitle}>Industrial Wastewater Treatment Plant</p>
         </div>
+
+        {error && <div style={{ color: 'red', textAlign: 'center', marginBottom: '10px', fontSize: '14px' }}>{error}</div>}
 
         {/* Form Section */}
         <form onSubmit={handleLogin} className={styles.form}>
@@ -73,15 +113,15 @@ const Login = () => {
             </div>
           </div>
 
-          <button type="submit" className={styles.loginButton}>
-            Login
+          <button type="submit" className={styles.loginButton} disabled={isLoading}>
+            {isLoading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
         <div className={styles.footer}>
-          <a href="#" className={styles.forgotPassword}>
+          <Link to="/forgot-password" className={styles.forgotPassword}>
             Forget Password?
-          </a>
+          </Link>
           <span className={styles.signUpText}>
             Don't have an account? <Link to="/signup" className={styles.signUpLink}>Sign Up</Link>
           </span>
