@@ -30,10 +30,9 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const apiIp = import.meta.env.VITE_API_IP;
-      const apiPort = import.meta.env.VITE_API_PORT;
+      const apiUrl = import.meta.env.VITE_API_URL;
       
-      const response = await fetch(`http://${apiIp}:${apiPort}/users/signup/`, {
+      const response = await fetch(`${apiUrl}/users/signup/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,6 +46,7 @@ const Signup = () => {
       });
       
       const data = await response.json();
+      console.log('Signup API Response:', data);
       
       if (response.ok && data.success) {
         if (data.tokens) {

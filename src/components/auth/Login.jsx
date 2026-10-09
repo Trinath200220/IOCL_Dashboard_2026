@@ -9,6 +9,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -19,10 +20,9 @@ const Login = () => {
 
     try {
       // Dynamically fetch from env
-      const apiIp = import.meta.env.VITE_API_IP;
-      const apiPort = import.meta.env.VITE_API_PORT;
+      const apiUrl = import.meta.env.VITE_API_URL;
       
-      const response = await fetch(`http://${apiIp}:${apiPort}/users/login/`, {
+      const response = await fetch(`${apiUrl}/users/login/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,6 +32,7 @@ const Login = () => {
       });
       
       const data = await response.json();
+      console.log('Login API Response:', data);
       
       if (response.ok && data.success) {
         // Save tokens and user data to local storage
