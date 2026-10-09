@@ -18,9 +18,8 @@ const Forgotpassword = () => {
       {/* Top App Bar */}
       <div className={styles.topBar}>
         <button className={styles.backButton} onClick={() => navigate(-1)}>
-          <ArrowLeft size={24} color="#ffffff" />
+          <ArrowLeft size={24} color="#000000" />
         </button>
-        <span className={styles.topBarTitle}>forgot-password</span>
       </div>
 
       {/* Main Content */}
