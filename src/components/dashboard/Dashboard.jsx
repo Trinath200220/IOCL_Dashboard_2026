@@ -1,6 +1,5 @@
 import React from 'react';
 import MetricCards from './MetricCards';
-import ProcessFlowDiagram from './ProcessFlowDiagram';
 import ProcessSteps from './ProcessSteps';
 import ProcessTable from './ProcessTable';
 import RealTimeFlowChart from './RealTimeFlowChart';
@@ -11,7 +10,6 @@ const Dashboard = () => {
   return (
     <div className={styles.dashboard}>
       <MetricCards />
-      <ProcessFlowDiagram />
       <ProcessSteps />
       
       <div className={styles.bottomRow}>

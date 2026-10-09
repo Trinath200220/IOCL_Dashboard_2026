@@ -11,6 +11,9 @@ const ProcessTable = () => {
     { id: 5, process: 'COAGULANT PREPARATION', treatment: 'ONCE ONLY IN THIS PROCESS', asset: 'STEPPER_M_1', code: 'COAGULANT_AO', start: '09:15 AM', end: '09:16 AM', status: 'In Progress' },
     { id: 6, process: 'COAGULANT MIXING BEFORE REACTOR (BOPR)', treatment: 'ONCE ONLY IN THIS PROCESS', asset: 'COAGULANT_STEPPER_M_1', code: 'COAGULANT_AO', start: '09:17 AM', end: '09:27 AM', status: 'Pending' },
     { id: 7, process: 'DC PUMP START', treatment: 'A ONLY IN THIS PROCESS', asset: 'COAGULANT_PUMP_1', code: 'COAGULANT_AO', start: '09:30 AM', end: '09:31 AM', status: 'Pending' },
+    { id: 8, process: 'FLOCCULANT PREPARATION', treatment: 'ONCE ONLY IN THIS PROCESS', asset: 'STEPPER_M_2', code: 'FLOCCULANT_AO', start: '09:35 AM', end: '09:40 AM', status: 'Pending' },
+    { id: 9, process: 'MIXING TANK OPERATION', treatment: 'CONTINUOUS PROCESS', asset: 'MIXER_1, MIXER_2', code: 'MIXING_CTRL', start: '09:45 AM', end: '10:00 AM', status: 'Pending' },
+    { id: 10, process: 'DAF TANK SEPARATION', treatment: 'FINAL SEPARATION', asset: 'DAF_SYSTEM_1', code: 'DAF_CTRL_AO', start: '10:05 AM', end: '10:30 AM', status: 'Pending' },
   ];
 
   const getStatusClass = (status) => {
@@ -66,7 +69,7 @@ const ProcessTable = () => {
       </div>
 
       <div className={styles.pagination}>
-        <span className={styles.showing}>Showing 1 to 7 of 21 entries</span>
+        <span className={styles.showing}>Showing 1 to 10 of 21 entries</span>
         <div className={styles.pageControls}>
           <button className={styles.pageBtn}><ChevronsLeft size={14} /></button>
           <button className={styles.pageBtn}><ChevronLeft size={14} /></button>
