@@ -315,12 +315,8 @@
 
 
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
   Layers,
   PlayCircle,
   CheckCircle2,
@@ -426,12 +422,18 @@ const ProcessTablePage = () => {
   const [error, setError] = useState("");
   const [searchText, setSearchText] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [selectedBatchId, setSelectedBatchId] = useState(null);
 
-  // Fetch stages and their batches from the API
+  // true only until the first successful response
+  const isFirstLoad = useRef(true);
+
+  // Fetch stages and their batches from the API (initial + every 3 seconds)
   useEffect(() => {
     const fetchStages = async () => {
       try {
-        setLoading(true);
+        if (isFirstLoad.current) {
+          setLoading(true);
+        }
         setError("");
 
         const response = await getStagesWithBatches();
@@ -467,31 +469,20 @@ const ProcessTablePage = () => {
           localStorage.setItem("mixingTankId", String(mixingTankId));
         }
 
-        console.log(
-          "Waste Water ID:",
-          localStorage.getItem("wasteWaterId")
-        );
-        console.log(
-          "Clean Water ID:",
-          localStorage.getItem("cleanWaterId")
-        );
-        console.log(
-          "Mixing Tank ID:",
-          localStorage.getItem("mixingTankId")
-        );
-
         setStages(stagesData);
 
-        // Select Waste Water initially, or the first available stage.
-        const initialStage = stagesData.find(
-          (stage) => stage.name === "Waste Water"
-        );
+        // Keep current tab if it still exists; otherwise pick Waste Water / first stage
+        setActiveStage((prev) => {
+          const stillExists = stagesData.some((s) => s.name === prev);
+          if (stillExists) return prev;
 
-        if (initialStage) {
-          setActiveStage(initialStage.name);
-        } else if (stagesData.length > 0) {
-          setActiveStage(stagesData[0].name);
-        }
+          const initialStage = stagesData.find(
+            (stage) => stage.name === "Waste Water"
+          );
+          return initialStage?.name || stagesData[0]?.name || prev;
+        });
+
+        isFirstLoad.current = false;
       } catch (err) {
         console.error("Error fetching stages:", err);
         setError(
@@ -502,16 +493,24 @@ const ProcessTablePage = () => {
       }
     };
 
+    // Call immediately on mount
     fetchStages();
+
+    // Then every 3 seconds
+    const intervalId = setInterval(fetchStages, 3000);
+
+    // Cleanup when component unmounts
+    return () => clearInterval(intervalId);
   }, []);
 
-  // Find the currently selected stage.
-  const selectedStage = stages.find(
-    (stage) => stage.name === activeStage
-  );
+  const selectedStage = stages.find((stage) => stage.name === activeStage);
 
-  // Display batches belonging only to the selected stage.
   const batches = selectedStage?.batches || [];
+
+  const selectedBatch = batches.find((batch) => batch.id === selectedBatchId);
+
+  // Execution logs for the selected batch
+  const executionLogs = selectedBatch?.process_executions || [];
 
   // Search and status filtering.
   const filteredBatches = useMemo(() => {
@@ -538,15 +537,11 @@ const ProcessTablePage = () => {
   ).length;
 
   const runningCount = allBatches.filter((batch) =>
-    ["RUNNING", "IN_PROGRESS"].includes(
-      (batch.status || "").toUpperCase()
-    )
+    ["RUNNING", "IN_PROGRESS"].includes((batch.status || "").toUpperCase())
   ).length;
 
   const stoppedCount = allBatches.filter((batch) =>
-    ["STOPPED", "FAILED"].includes(
-      (batch.status || "").toUpperCase()
-    )
+    ["STOPPED", "FAILED"].includes((batch.status || "").toUpperCase())
   ).length;
 
   const metrics = [
@@ -587,16 +582,18 @@ const ProcessTablePage = () => {
   ];
 
   if (loading) {
-    return <div className={styles.dashboardContainer}>Loading treatment stages...</div>;
+    return (
+      <div className={styles.dashboardContainer}>
+        Loading treatment stages...
+      </div>
+    );
   }
 
   if (error) {
     return (
       <div className={styles.dashboardContainer}>
         <p>{error}</p>
-        <button onClick={() => window.location.reload()}>
-          Retry
-        </button>
+        <button onClick={() => window.location.reload()}>Retry</button>
       </div>
     );
   }
@@ -642,6 +639,7 @@ const ProcessTablePage = () => {
             }`}
             onClick={() => {
               setActiveStage(stage.name);
+              setSelectedBatchId(null);
               setSearchText("");
               setStatusFilter("ALL");
             }}
@@ -694,86 +692,61 @@ const ProcessTablePage = () => {
           </div>
         </div>
 
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>S.No</th>
-              <th>Batch Number</th>
-              <th>Status</th>
-              <th>Started At</th>
-              <th>Completed At</th>
-              <th>Duration</th>
-            </tr>
-          </thead>
+        <div className={styles.tableScrollWrapper}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Batch Number</th>
+                <th>Status</th>
+                <th>Started At</th>
+                <th>Completed At</th>
+                <th>Duration</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {filteredBatches.length > 0 ? (
-              filteredBatches.map((batch, index) => (
-                <tr key={batch.id}>
-                  <td>{index + 1}</td>
-
-                  <td style={{ fontWeight: 500, color: "#1e293b" }}>
-                    {batch.batch_number || "-"}
-                  </td>
-
-                  <td>
-                    <span
-                      className={`${styles.statusBadge} ${getStatusClass(
-                        batch.status
-                      )}`}
-                    >
-                      {formatStatus(batch.status)}
-                    </span>
-                  </td>
-
-                  <td>{formatDate(batch.started_at)}</td>
-
-                  <td>{formatDate(batch.completed_at)}</td>
-
-                  <td>
-                    {formatDuration(
-                      batch.started_at,
-                      batch.completed_at
-                    )}
+            <tbody>
+              {filteredBatches.length > 0 ? (
+                filteredBatches.map((batch, index) => (
+                  <tr
+                    key={batch.id}
+                    onClick={() => setSelectedBatchId(batch.id)}
+                    style={{
+                      cursor: "pointer",
+                      background:
+                        selectedBatchId === batch.id ? "#eff6ff" : undefined,
+                    }}
+                  >
+                    <td>{index + 1}</td>
+                    <td>{batch.batch_number || "-"}</td>
+                    <td>
+                      <span
+                        className={`${styles.statusBadge} ${getStatusClass(
+                          batch.status
+                        )}`}
+                      >
+                        {formatStatus(batch.status)}
+                      </span>
+                    </td>
+                    <td>{formatDate(batch.started_at)}</td>
+                    <td>{formatDate(batch.completed_at)}</td>
+                    <td>
+                      {formatDuration(batch.started_at, batch.completed_at)}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="6"
+                    style={{ textAlign: "center", padding: "20px" }}
+                  >
+                    No batches found for this stage.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
-                  No batches found for this stage.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-
-        <div className={styles.pagination}>
-          <span className={styles.showingText}>
-            Showing {filteredBatches.length > 0 ? 1 : 0} to{" "}
-            {filteredBatches.length} of {filteredBatches.length} entries
-          </span>
-
-          <div className={styles.pageControls}>
-            <button className={styles.pageBtn} disabled>
-              <ChevronsLeft size={14} />
-            </button>
-            <button className={styles.pageBtn} disabled>
-              <ChevronLeft size={14} />
-            </button>
-            <button className={`${styles.pageBtn} ${styles.active}`}>
-              1
-            </button>
-            <button className={styles.pageBtn} disabled>
-              <ChevronRight size={14} />
-            </button>
-            <button className={styles.pageBtn} disabled>
-              <ChevronsRight size={14} />
-            </button>
-            <select className={styles.pageSelect} defaultValue="all" disabled>
-              <option value="all">All / page</option>
-            </select>
-          </div>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -781,19 +754,79 @@ const ProcessTablePage = () => {
       <div className={styles.tableSection}>
         <div className={styles.sectionHeader}>
           <div className={styles.sectionTitle}>
-            Latest Process Execution Logs
+            Process Execution Logs
+            {selectedBatch && (
+              <span style={{ marginLeft: "8px" }}>
+                (Batch: {selectedBatch.batch_number})
+              </span>
+            )}
           </div>
         </div>
 
-        <p style={{ padding: "16px" }}>
-          The stages-with-batches API does not provide process execution log
-          details. Connect the relevant execution-logs API to populate this
-          section.
-        </p>
+        {!selectedBatch ? (
+          <p style={{ padding: "16px" }}>
+            Select a batch from the {activeStage} table to view its execution
+            logs.
+          </p>
+        ) : (
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Process Name</th>
+                <th>Sequence</th>
+                <th>Equipment</th>
+                <th>Started At</th>
+                <th>Completed At</th>
+                <th>Duration (sec)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {executionLogs.length > 0 ? (
+                executionLogs.map((log, index) => (
+                  <tr key={log.id}>
+                    <td>{index + 1}</td>
+                    <td>{log.process?.name || "-"}</td>
+                    <td>{log.process?.sequence ?? "-"}</td>
+                    <td>
+                      {log.process?.equipments?.length > 0
+                        ? log.process.equipments
+                            .map((equipment) => equipment.name)
+                            .join(", ")
+                        : "-"}
+                    </td>
+                    <td>{formatDate(log.started_at)}</td>
+                    <td>{formatDate(log.completed_at)}</td>
+                    <td>{log.actual_duration_seconds ?? "-"}</td>
+                    <td>
+                      <span
+                        className={`${styles.statusBadge} ${getStatusClass(
+                          log.status
+                        )}`}
+                      >
+                        {formatStatus(log.status)}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="8"
+                    style={{ textAlign: "center", padding: "20px" }}
+                  >
+                    No execution logs available for this batch.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
 };
 
 export default ProcessTablePage;
-

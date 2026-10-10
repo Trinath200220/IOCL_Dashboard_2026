@@ -381,3 +381,43 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+/* ===== Batches table scroll (max ~7 rows) ===== */
+.tableSection .table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableSection .table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.tableSection .table thead th {
+  background-color: #f8fafc;
+}
+
+.tableScrollWrapper {
+  max-height: 350px; /* ~7 rows */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.tableScrollWrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tableScrollWrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.tableScrollWrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.tableScrollWrapper::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
