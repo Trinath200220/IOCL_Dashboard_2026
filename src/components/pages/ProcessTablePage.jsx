@@ -496,8 +496,8 @@ const ProcessTablePage = () => {
     // Call immediately on mount
     fetchStages();
 
-    // Then every 3 seconds
-    const intervalId = setInterval(fetchStages, 3000);
+    // Then every 2 seconds
+    const intervalId = setInterval(fetchStages, 2000);
 
     // Cleanup when component unmounts
     return () => clearInterval(intervalId);

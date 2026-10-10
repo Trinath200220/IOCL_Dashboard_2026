@@ -448,7 +448,7 @@ useEffect(() => {
     fetchCategories();
     fetchOverview();
     fetchTypes();
-  }, 1000);
+  }, 2000);
 
   return () => clearInterval(refreshInterval);
 }, [selectedCategory, currentPage, itemsPerPage, loading]);
